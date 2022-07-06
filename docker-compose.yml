@@ -1,0 +1,36 @@
+# docker run --name ipfs_host -v $ipfs_staging:/export -v $ipfs_data:/data/ipfs -p 4001:4001 -p 0.0.0.0:8080:8080 -p 0.0.0.0:5001:5001 ipfs/go-ipfs:latest
+# docker run  -p 0.0.0.0:9933:9933 -p 0.0.0.0:9944:9944 -p 0.0.0.0:30333:30333 trustalliance/trust-node:v0.0.1 --dev --tmp --ws-external
+version: "3"
+services:
+  ipfs_host:
+    image: ipfs/go-ipfs:latest
+    ports:
+      - "4001:4001"
+      # - "0.0.0.0:8080:8080"
+      - "8080:8080"
+      # - "0.0.0.0:5001:5001"
+      - "5001:5001"
+    # volumes:
+    #   - $ipfs_staging:/export
+    #   - $ipfs_data:/data/ipfs
+  ipfs_api:
+    build: https://github.com/TrustAllianceNZ/trustalliance-ipfs.git#main
+    ports:
+      - "3350:3350"
+    environment:
+      - PORT=3350
+      - IPFS_BASE_URL=http://ipfs_host
+  trust_node:
+    image: trustalliance/trust-node:v0.0.1
+    ports:
+      # - "0.0.0.0:9933:9933"
+      - "9933:9933"
+      # - "0.0.0.0:9944:9944"
+      - "9944:9944"
+      # - "0.0.0.0:30333:30333"
+      - "30333:30333"
+    command:
+      - "--dev"
+      - "--tmp"
+      - "--ws-external"
+      # - "--unsafe-ws-external"
