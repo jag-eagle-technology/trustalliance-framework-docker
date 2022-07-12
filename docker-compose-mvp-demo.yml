@@ -26,3 +26,9 @@ services:
       - "--dev"
       - "--tmp"
       - "--ws-external"
+  mvp_demo:
+    build: https://github.com/jag-eagle-technology/trustalliance_sdk_mvp_demo.git#main
+    environment:
+      - NODE_URL=ws://trust_node:9944
+      - IPFS_API_BASE_URL=http://ipfs_api:3350
+      - IPFS_STORE_URL=http://ipfs_host:8080/ipfs/
